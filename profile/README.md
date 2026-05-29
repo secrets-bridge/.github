@@ -2,9 +2,11 @@
   <img src="logo.svg" alt="Secrets Bridge" width="640" />
 </p>
 
+<h2 align="center">The brain behind your secrets.</h2>
+
 <p align="center">
-  <b>A distributed secrets control plane platform.</b><br/>
-  Approvals, RBAC, audit, and least-privilege agent execution<br/>
+  Unified secrets control plane for cloud-native teams.<br/>
+  Approvals · RBAC · audit · least-privilege agent execution<br/>
   across <b>HashiCorp Vault</b>, <b>AWS Secrets Manager</b>, <b>Azure Key Vault</b>, <b>GCP Secret Manager</b>, and <b>Kubernetes / GitOps</b>.
 </p>
 
@@ -17,9 +19,9 @@
 ## The model
 
 ```text
-Control Plane  =  decisions, workflow, metadata, audit, RBAC, jobs, status
-Agent          =  least-privilege execution inside the target account / cluster
-Providers      =  the actual secret values (source of truth)
+Control Plane (the brain)  =  decisions, workflow, metadata, audit, RBAC, jobs, status
+Agent                       =  least-privilege execution inside the target account / cluster
+Providers                   =  the actual secret values (source of truth)
 ```
 
 The Control Plane **never holds your secret values** or broad provider access. A lightweight, **outbound-only agent** runs inside each target boundary and executes approved jobs locally with scoped credentials.
@@ -28,7 +30,7 @@ The Control Plane **never holds your secret values** or broad provider access. A
 
 Developers need a safe way to request and update secrets without broad provider access. Security teams need approvals, separation of duties, and an audit trail. Platform teams need cross‑provider sync with drift and conflict visibility.
 
-**Secrets Bridge brings governance and synchronization together in one platform.**
+**One brain, every provider.** Secrets Bridge brings governance and synchronization together in one platform — without replacing the tools your teams already use.
 
 ## Repositories
 
@@ -45,7 +47,7 @@ Developers need a safe way to request and update secrets without broad provider 
 
 ## Security principles
 
-- **No secret values** in databases, caches, logs, API responses, or the frontend.
+- **No central store of secret values** — compromising the control plane exposes nothing.
 - Agents are **outbound-only** and least-privilege, with no database or cache dependency.
 - Every privileged action is **audited** with a correlation ID.
 - Provider access is **scoped** by account, project, environment, path, tag, or policy.
@@ -56,9 +58,11 @@ Developers need a safe way to request and update secrets without broad provider 
   <img src="icon.svg" alt="Icon · Control Plane" width="120" />
   &nbsp;&nbsp;&nbsp;
   <img src="favicon.svg" alt="Favicon · App" width="80" />
+  &nbsp;&nbsp;&nbsp;
+  <img src="mascot.svg" alt="Bridgey — the Secrets Bridge mascot" width="120" />
 </p>
 
-The wordmark, icon set, and favicon are committed alongside this README in [`profile/`](./). The canonical design source is the Figma file **Secrets Bridge — Brand**.
+<p align="center"><sub>Wordmark · icon set · favicon · <b>Bridgey</b> the mascot — all in <a href="./"><code>profile/</code></a>. Canonical design source: the Figma file <b>Secrets Bridge — Brand</b>.</sub></p>
 
 ---
 
