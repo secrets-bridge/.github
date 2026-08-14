@@ -6,7 +6,7 @@ Thanks for taking the time to contribute. These rules apply to every repo in the
 
 - **One repo, one task at a time.** Confirm which component you're touching (`core`, `api`, `worker`, `agent`, `controller`, `ui`, `charts`, `docs`) before starting work.
 - **Branch off `main`.** Use a descriptive branch name: `feat/short-description`, `fix/short-description`, `docs/short-description`, `ci/short-description`, `chore/short-description`.
-- **Conventional commits.** Commit messages follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) — `feat:`, `fix:`, `docs:`, `chore:`, `ci:`, `refactor:`, `test:`, etc. Use `!` or `BREAKING CHANGE:` for breaking changes.
+- **Conventional commits.** Commit messages follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/). Use `feat:`, `fix:`, `docs:`, `chore:`, `ci:`, `refactor:`, `test:`, and similar. Use `!` or `BREAKING CHANGE:` for breaking changes.
 - **Open a pull request.** Push your branch and open a PR against `main`. Fill in the PR template.
 - **Never merge or approve your own PR.** `main` is protected on every repo; the maintainer (or a designated reviewer) merges.
 - **No force-push to `main`.** Force-push is allowed on your own feature branches during review iteration.
