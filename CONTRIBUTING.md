@@ -37,6 +37,10 @@ These are enforced in review. Violations block merge.
 - **Every workflow-changing action emits an audit event** with a correlation ID.
 - **API / worker / UI are stateless** and horizontally scalable. Durable state lives in Postgres; short-lived coordination in Redis.
 
+## Releases
+
+All repos release together under one shared version. Maintainers follow [RELEASING.md](RELEASING.md).
+
 ## Reporting security issues
 
 **Do not open a public issue.** See [SECURITY.md](SECURITY.md).
