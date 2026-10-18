@@ -10,6 +10,7 @@ Thanks for taking the time to contribute. These rules apply to every repo in the
 - **Open a pull request.** Push your branch and open a PR against `main`. Fill in the PR template.
 - **Never merge or approve your own PR.** `main` is protected on every repo; the maintainer (or a designated reviewer) merges.
 - **No force-push to `main`.** Force-push is allowed on your own feature branches during review iteration.
+- **No AI attribution.** Commit messages and PR descriptions describe the change only. Don't add `Co-Authored-By` trailers for AI assistants, "Generated with ..." lines or links to AI sessions. A squash merge copies the PR body into the commit on `main`, where it can't be edited later. If you use a coding assistant, turn off its commit and PR attribution in its settings.
 
 ## Local checks before opening a PR
 
