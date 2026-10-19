@@ -21,10 +21,13 @@
 ```text
 Control Plane (the brain)  =  decisions, workflow, metadata, audit, RBAC, jobs, status
 Agent                       =  least-privilege execution inside the target account / cluster
+Gateway (optional)          =  read-only observation inside the customer boundary: did the change roll out?
 Providers                   =  the actual secret values (source of truth)
 ```
 
 The Control Plane never holds your secret values or broad provider access. A lightweight, outbound-only agent runs inside each target boundary and executes approved jobs locally with scoped credentials.
+
+The optional Gateway closes the loop after a change. It also runs inside the customer boundary and connects outbound only. It reads External Secrets Operator status, Deployment rollout and ArgoCD state, never Secrets, and reports metadata-only evidence that the new version reached the workloads.
 
 ## Why
 
@@ -40,6 +43,7 @@ One brain, every provider. Secrets Bridge puts governance and synchronization in
 | [**api**](https://github.com/secrets-bridge/api) | Control Plane API (Go + Fiber) |
 | [**worker**](https://github.com/secrets-bridge/worker) | Background workers (Go) |
 | [**agent**](https://github.com/secrets-bridge/agent) | Outbound-only, least-privilege execution agent (Go) |
+| [**gateway**](https://github.com/secrets-bridge/gateway) | Optional, outbound-only, read-only observation plane: ESO, rollout and ArgoCD evidence (Go) |
 | [**controller**](https://github.com/secrets-bridge/controller) | Kubernetes operator + CRDs for SecretsSync (GitOps) |
 | [**ui**](https://github.com/secrets-bridge/ui) | Dashboard SPA (React + TypeScript + Vite) |
 | [**charts**](https://github.com/secrets-bridge/charts) | Helm charts / deploy manifests |
@@ -49,6 +53,7 @@ One brain, every provider. Secrets Bridge puts governance and synchronization in
 
 - No central store of secret values: compromising the control plane exposes nothing.
 - Agents are outbound-only and least-privilege, with no database or cache dependency.
+- The Gateway is read-only and has no access to Kubernetes Secrets. It refuses to start if it can read them.
 - Every privileged action is audited with a correlation ID.
 - Provider access is scoped by account, project, environment, path, tag, or policy.
 
@@ -66,4 +71,4 @@ One brain, every provider. Secrets Bridge puts governance and synchronization in
 
 ---
 
-Status: a usable preview. The control plane, agent, worker, dashboard, Helm chart, and docs site are live; the platform is being hardened before a tagged v1.0 release.
+Status: a usable preview. The control plane, agent, worker, dashboard, Helm chart, and docs site are live; the platform is being hardened before a tagged v1.0 release. The Gateway is in early implementation: its design ([ADR 0001](https://github.com/secrets-bridge/gateway/blob/main/docs/adr/0001-gateway-observation-plane.md)) is accepted, and its control-plane side is next.
