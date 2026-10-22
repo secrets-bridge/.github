@@ -2,16 +2,19 @@
   <img src="logo.svg" alt="Secrets Bridge" width="640" />
 </p>
 
-<h2 align="center">The brain behind your secrets.</h2>
+<h2 align="center">Access control for the secrets you already keep.</h2>
 
 <p align="center">
-  Unified secrets control plane for cloud-native teams.<br/>
-  Approvals · RBAC · audit · least-privilege agent execution<br/>
-  across <b>HashiCorp Vault</b> and <b>AWS Secrets Manager</b> today, with <b>Azure Key Vault</b> and <b>GCP Secret Manager</b> on the roadmap, plus <b>Kubernetes / GitOps</b>.
+  Secrets Bridge governs who may use the secrets your team keeps in <b>AWS Secrets Manager</b> or <b>HashiCorp Vault</b>.<br/>
+  It adds access requests, approvals, RBAC, audit and agent execution around them. The values stay in your provider.<br/>
+  <b>Azure Key Vault</b> and <b>GCP Secret Manager</b> are on the roadmap.
 </p>
 
 <p align="center">
-  <a href="https://secrets-bridge.io">secrets-bridge.io</a>
+  <a href="https://secrets-bridge.io/latest/">Documentation</a> ·
+  <a href="https://secrets-bridge.io/latest/overview/product-status/">Product status</a> ·
+  <a href="https://secrets-bridge.io/latest/operations/docker-compose/">Run it locally</a> ·
+  <a href="https://secrets-bridge.io/latest/overview/architecture/">Architecture</a>
 </p>
 
 ---
@@ -19,21 +22,19 @@
 ## The model
 
 ```text
-Control Plane (the brain)  =  decisions, workflow, metadata, audit, RBAC, jobs, status
-Agent                       =  least-privilege execution inside the target account / cluster
-Gateway (optional)          =  read-only observation inside the customer boundary: did the change roll out?
-Providers                   =  the actual secret values (source of truth)
+Control plane       =  requests, approvals, RBAC, policy, audit, jobs and metadata
+Agent               =  runs inside your account or cluster, executes approved jobs, only connects out
+Gateway (optional)  =  read-only observation inside your boundary: did the change roll out?
+Provider            =  the secret values (the source of truth)
 ```
 
-The Control Plane never holds your secret values or broad provider access. A lightweight, outbound-only agent runs inside each target boundary and executes approved jobs locally with scoped credentials.
+We keep requests, approvals and audit metadata. We don't keep your secret values: an agent inside your infrastructure reads and writes them with its own credentials and connects out to the control plane, so you open no inbound port.
 
-The optional Gateway closes the loop after a change. It also runs inside the customer boundary and connects outbound only. It reads External Secrets Operator status, Deployment rollout and ArgoCD state, never Secrets, and reports metadata-only evidence that the new version reached the workloads.
+The optional Gateway also runs inside your boundary and only connects out. Release 1 reads Argo CD Application state, never Secrets, and reports metadata-only evidence that a change reached the workloads. External Secrets Operator and Deployment rollout observation are planned for Release 2.
 
 ## Why
 
-Developers need a safe way to request and update secrets without broad provider access. Security teams need approvals, separation of duties, and an audit trail. Platform teams need cross-provider sync with drift and conflict visibility.
-
-One brain, every provider. Secrets Bridge puts governance and synchronization in one platform, without replacing the tools your teams already use.
+Developers need a safe way to ask for and update secrets without broad provider access. Security teams need approvals, separation of duties and an audit trail. Secrets Bridge adds those around the providers you already use instead of replacing them.
 
 ## Repositories
 
@@ -43,17 +44,18 @@ One brain, every provider. Secrets Bridge puts governance and synchronization in
 | [**api**](https://github.com/secrets-bridge/api) | Control Plane API (Go + Fiber) |
 | [**worker**](https://github.com/secrets-bridge/worker) | Background workers (Go) |
 | [**agent**](https://github.com/secrets-bridge/agent) | Outbound-only, least-privilege execution agent (Go) |
-| [**gateway**](https://github.com/secrets-bridge/gateway) | Optional, outbound-only, read-only observation plane: ESO, rollout and ArgoCD evidence (Go) |
+| [**gateway**](https://github.com/secrets-bridge/gateway) | Optional, outbound-only, read-only observation plane: Argo CD rollout evidence in Release 1 (Go) |
 | [**controller**](https://github.com/secrets-bridge/controller) | Kubernetes operator + CRDs for SecretsSync (GitOps) |
 | [**ui**](https://github.com/secrets-bridge/ui) | Dashboard SPA (React + TypeScript + Vite) |
 | [**charts**](https://github.com/secrets-bridge/charts) | Helm charts / deploy manifests |
-| [**docs**](https://github.com/secrets-bridge/docs) | Documentation site → [secrets-bridge.io](https://secrets-bridge.io) |
+| [**docs**](https://github.com/secrets-bridge/docs) | Documentation site: [secrets-bridge.io](https://secrets-bridge.io/latest/) |
 
 ## Security principles
 
-- No central store of secret values: compromising the control plane exposes nothing.
+- No secret values in plain text in the control plane: not in Postgres, Redis, logs, API responses or audit events. A value in transit exists only as a KMS-wrapped, single-use wrap with a short lifetime.
 - Agents are outbound-only and least-privilege, with no database or cache dependency.
 - The Gateway is read-only and has no access to Kubernetes Secrets. It refuses to start if it can read them.
+- Production environments never allow direct reveal. The refusal is enforced in code and audited.
 - Every privileged action is audited with a correlation ID.
 - Provider access is scoped by account, project, environment, path, tag, or policy.
 
@@ -71,4 +73,4 @@ One brain, every provider. Secrets Bridge puts governance and synchronization in
 
 ---
 
-Status: a usable preview. The control plane, agent, worker, dashboard, Helm chart, and docs site are live; the platform is being hardened before a tagged v1.0 release. The Gateway is in early implementation: its design ([ADR 0001](https://github.com/secrets-bridge/gateway/blob/main/docs/adr/0001-gateway-observation-plane.md)) is accepted, and its control-plane side is next.
+Status: open source and pre-1.0. The control plane, agent, worker, dashboard, Helm charts and docs site are live; Gateway Release 1 (Argo CD) is in progress. [Product status](https://secrets-bridge.io/latest/overview/product-status/) lists what is live, QA-certified, in progress and on the roadmap.
